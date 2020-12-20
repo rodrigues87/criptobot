@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Moeda</th>
+            <th scope="col">Preço</th>
+            <th scope="col">Compra</th>
+            <th scope="col">Precisao</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>{{ ativo.symbol }}</td>
+            <td>{{ ativo.price }}</td>
+            <td>{{ compra }}</td>
+            <td>{{ precisao }}</td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock content %}
