@@ -25,6 +25,9 @@ def check_status():
         resultado = ((high / open) * 100) - 100
         if resultado > 1.5:
             aumentou = 1
+            ordem = Ordem.objects.get(date=data)
+            ordem.fechar_ordem_compra()
+
         else:
             aumentou = 0
 
@@ -40,19 +43,23 @@ def check_status():
                 datetime.datetime.fromtimestamp(float(historico.date) / 1000.0)))
 
         except Historico.DoesNotExist:
+
+            ordem = Ordem.objects.get(date=data)
+            ordem.fechar_ordem_compra()
+
             retorno = naive_bailes(data, open)
             previsao = retorno[1][0]
 
             historico = Historico.objects.create(date=data, open=open, high=high, previsao=previsao)
             historico.save()
 
-            #if previsao == 1:
-            #    #TODO PRECISO TRATAR CASO NÃO EXISTA
-            #    ativo = Ativo.objects.get(nome="BTCUSDT")
-            #    ativo.verificar_valor_de_mercado()
+            if previsao == 1:
+                # TODO PRECISO TRATAR CASO NÃO EXISTA
+                ativo = Ativo.objects.get(sigla="BTCUSDT")
+                ativo.verificar_valor_de_mercado()
 
-#                ordem = Ordem.objects.create(ativo=ativo, valor_compra=ativo.valor_de_mercado, data_compra=data)
-#                ordem.abrir_ordem_compra()
+                ordem = Ordem.objects.create(ativo=ativo, valor_compra=ativo.valor_de_mercado, data_compra=data)
+                ordem.abrir_ordem_compra()
 
             print("novo historico salvo:" + str(historico.date) + str(
                 datetime.datetime.fromtimestamp(float(historico.date) / 1000.0)))
