@@ -3,13 +3,22 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import confusion_matrix, accuracy_score
+import sqlite3
 
 
-def naive_bailes(data,open):
-    base = pd.read_csv('btc_usd.csv')
+def naive_bailes(data, open):
+    con = sqlite3.connect("db.sqlite3")
 
-    previsores = base.iloc[:, 0:2].values
-    classe = base.iloc[:, 3].values
+    surveys_df = pd.read_sql_query("SELECT * from historico_historico", con)
+
+    previsores = surveys_df.iloc[:, 1:3].values
+
+    classe = surveys_df.iloc[:, 4].values
+
+    # base = pd.read_csv('btc_usd.csv')
+
+    # previsores = base.iloc[:, 0:2].values
+    # classe = base.iloc[:, 3].values
 
     scaler = StandardScaler()
     previsores = scaler.fit_transform(previsores)
@@ -29,8 +38,6 @@ def naive_bailes(data,open):
 
     previsao_atual = classificador.predict(scaler.fit_transform(atributos))
 
-    resposta = [precisao,previsao_atual]
+    resposta = [precisao, previsao_atual]
 
     return resposta
-
-
