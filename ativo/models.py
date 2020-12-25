@@ -9,11 +9,11 @@ class Ativo(models.Model):
     valor_de_mercado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
 
     def verificar_valor_de_mercado(self):
-        url = api_binance + preco_atual("BTCUSDT")
+        url = api_binance + preco_atual + "BTCUSDT"
         response = requests.get(url)
 
-        self.valor_de_mercado = response.json()[1]
-        print(self.valor_de_mercado)
+        self.valor_de_mercado = response.json()["price"]
+        self.save()
 
     def __str__(self):
         return self.nome

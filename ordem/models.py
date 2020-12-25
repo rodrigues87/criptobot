@@ -5,6 +5,41 @@ from ativo.models import Ativo
 from capital.models import Capital
 
 
+def iniciar_ordem_compra(historico):
+    if historico.previsao == 1:
+
+        if buscar_pela_ordem(historico) is None:
+            ativo = Ativo.objects.get(sigla="BTCUSDT")
+            ativo.verificar_valor_de_mercado()
+
+            ordem = Ordem.objects.create(ativo=ativo, valor_compra=ativo.valor_de_mercado, data_compra=historico.date)
+            ordem.abrir_ordem_compra()
+
+
+def iniciar_ordem_venda(historico):
+    ativo = Ativo.objects.get(sigla="BTCUSDT")
+    ativo.verificar_valor_de_mercado()
+
+    try:
+        ordem = Ordem.objects.get(data_compra=historico.date)
+
+        ordem.data_venda = historico.date
+        ordem.valor_venda = ativo.valor_de_mercado
+        ordem.fechar_ordem_compra()
+
+    except Ordem.DoesNotExist:
+        print("")
+
+
+def buscar_pela_ordem(historico):
+    try:
+        ordem = Ordem.objects.get(date=historico.data)
+        return ordem
+    except Ordem.DoesNotExist:
+        print("A ordem não existe")
+        return None
+
+
 class Ordem(models.Model):
     ativo = models.ForeignKey(Ativo, on_delete=models.CASCADE)
     valor_compra = models.DecimalField(max_digits=20, decimal_places=2)
