@@ -1,13 +1,7 @@
 import datetime
-from datetime import timedelta
 
-import requests
-
-from ativo.models import Ativo
-from constantes import api_binance, estatistica
-from historico.models import Historico, solicitar_estatistica_atual, buscar_pelo_historico
-from novo import naive_bailes
-from ordem.models import Ordem, buscar_pela_ordem, iniciar_ordem_compra, iniciar_ordem_venda
+from historico.models import solicitar_estatistica_atual, buscar_pelo_historico
+from ordem.models import iniciar_ordem_compra, iniciar_ordem_venda
 
 
 def check_status():

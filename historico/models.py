@@ -63,18 +63,14 @@ class Historico(models.Model):
 
         self.variacao = ((self.high / self.open) * 100) - 100
 
-        if self.variacao > 1.5:
-            if self.previsao == 1:
-                self.acertou = 1
-            else:
-                self.acertou = 0
-
-        else:
-
-            if self.previsao == 0:
-                self.acertou = 1
-            else:
-                self.acertou = 0
+        if self.variacao >= 1.5 and self.previsao == 1:
+            self.acertou = 1
+        if self.variacao < 1.5 and self.previsao == 1:
+            self.acertou = 0
+        if self.variacao < 1.5 and self.previsao == 0:
+            self.acertou = 1
+        if self.variacao > 1.5 and self.previsao == 0:
+            self.acertou = 0
 
     def __str__(self):
         return self.date
